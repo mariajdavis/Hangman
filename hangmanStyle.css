@@ -1,0 +1,59 @@
+@media only screen and (max-width: 750px) {
+    img#hangman {
+        width: 50%;
+        height: 20%;
+    }
+    #buttonStyle {
+        height: 15%;
+        width: 15%;
+        margin-right: 4px;
+        margin-bottom: 10px;
+    }
+    p#definition {
+        font-size: 15px;
+    }
+}
+body {
+    text-align: center;
+    background-color: aliceblue;
+    font-family: courier;
+}
+button,
+#reset {
+    margin-right: 5px;
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+    transition: 0.3s;
+}
+#reset {
+    padding: 15px 20px;
+}
+button {
+    width: 40px;
+    text-align: center;
+}
+button:hover,
+#reset:hover {
+    background-color: #3e8e41;
+    cursor: pointer;
+}
+button:active #reset:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+#hangman {
+    border: 1px solid black;
+}
+div#solutionspace {
+    font-size: 1.7em;
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="hangmanStyle.css">
+</head>
+
+<body>
+    <p id='score'></p>
+    <input type=button id='reset' value='Start Game' onclick=resetGame()><br><br>
+    <img src='hangmanimages/start.png' id='hangman' width=300px height=383px>
+    <div id='solutionspace'></div><br>
+    <p id='definition'></p>
+    <p id='message'></p>
+    <div id='buttondiv'></div>
+    <script>
+        // Word Bank
+        let words = [["COMMITTEE", "a body of persons delegated to consider, investigate, take action on, or report on some matter"],
+        ["REMEMBER", "have in or be able to bring to one's mind an awareness of" +
+            "(someone or something that one has seen, known, or experienced in the past)"],
+        ["IMPORTANT", "of great significance or value; likely to have a profound effect on success, survival, or well-being"],
+        ["CONTAIN", "have or hold (someone or something) within"],
+        ["DECLARE", "saying something in a solemn and emphatic manner"],
+        ["HANGMAN", "a game for two in which one player tries to guess the letters of a word, and failed attempts are recorded" +
+            "by drawing a gallows and someone hanging on it, line by line"],
+        ["JAVASCRIPT", "an object-oriented computer programming language commonly used to create interactive effects within web browsers"],
+        ["CATEGORY", "a class or division of people or things regarded as having particular shared characteristics"],
+        ["QUESTION", "a sentence worded or expressed so as to elicit information"],
+        ["TATTOO", "a mark, figure, design, or word intentionally fixed or placed on the skin"],
+        ["ELECTRICITY", "a form of energy resulting from the existence of charged particles (such as electrons or protons), either statically" +
+            "as an accumulation of charge or dynamically as a current"]]
+        let score = 0
+        let buttons = document.getElementById('buttondiv')
+        let lives = 6;
+        let hangmanImage = document.getElementById('hangman')
+        let step = 0;
+        let correctLetters = 0;
+        let width = window.innerWidth;
+        function randomWord() {
+            // Generating random number within the word bank length
+            word = words[Math.floor(Math.random() * ((words.length - 1) + 1))]
+            // That number being the index inside dictionary
+            document.getElementById('definition').innerHTML = word[1]
+            let wordLength = word[0].length;
+            for (let i = 0; i < word[0].length; i++) {
+                createUnderscore(word[0][i]);
+            }
+            generateButtons(26, wordLength)
+        }
+        function createUnderscore(letter) {
+            let space = document.createElement('PARAGRAPH');
+            document.getElementById('solutionspace').appendChild(space)
+            space.type = 'p';
+            space.innerHTML = ' _ '
+            space.className = letter
+        }
+        function generateButtons(n, lengthOfWord) {
+            let asci = 65
+            for (let i = 0; i < n; i++) {
+                if (width > 750) {
+                    if (i === 15) {
+                        let br = document.createElement('br');
+                        buttons.appendChild(br)
+                        let hr = document.createElement('br');
+                        buttons.appendChild(hr);
+                    }
+                }
+                let btn = document.createElement("BUTTON");
+                btn.type = 'button';
+                btn.innerHTML = String.fromCharCode(asci);
+                btn.id = "buttonStyle"
+                buttons.appendChild(btn);
+                btn.onclick = function () { checkUserChoice(btn.innerHTML, lengthOfWord); btn.style.visibility = 'hidden'; }
+                asci++;
+            }
+        }
+        function checkUserChoice(innerHTML, wordLength) {
+            letter = innerHTML;
+            let correct = false;
+            for (let i = 0; i < word[0].length; i++) {
+                if (word[0][i] === letter) {
+                    correctLetters++;
+                    correct = true;
+                    score++;
+                    let items = [].slice.call(document.getElementsByClassName(letter));
+                    for (let j = 0; j < items.length; j++) {
+                        document.getElementById('message').innerHTML = 'Correct letter'
+                        items[j].innerHTML = ' ' + letter + ' ';
+                        document.getElementById('score').innerHTML = "Score: " + score + " Lives: " + lives;
+                    }
+                }
+            }
+            if (correct === false) {
+                step++;
+                lives--;
+                score--;
+                document.getElementById('score').innerHTML = "Score: " + score + " Lives: " + lives;
+                if (step < 6) {
+                    document.getElementById('message').innerHTML = 'Incorrect letter'
+                    hangmanImage.src = "hangmanimages/step" + step + ".png"
+                }
+                else {
+                    document.getElementById('message').innerHTML = 'Game over!'
+                    hangmanImage.src = "hangmanimages/dead.png"
+                    buttons.style.visibility = 'hidden'
+                    document.getElementById("definition").style.display = "none"
+                }
+            }
+            if (correctLetters === wordLength) {
+                document.getElementById('message').innerHTML = 'You win!';
+                buttons.style.visibility = 'hidden';
+                document.getElementById('reset').value = 'New Round';
+                document.getElementById("definition").style.display = "none"
+                document.getElementById('reset').onclick = function () { continueGame() };
+            }
+        }
+        function continueGame() {
+            document.getElementById('reset').value = 'Reset Game';
+            document.getElementById('reset').onclick = function () { resetGame() };
+            lives = 6;
+            hangmanImage.src = 'hangmanimages/start.png'
+            step = 0;
+            correctLetters = 0;
+            document.getElementById('score').innerHTML = "Score: " + score + " Lives: " + lives;
+            buttons.innerHTML = ''
+            document.getElementById('solutionspace').innerHTML = ''
+            document.getElementById('message').innerHTML = ''
+            buttons.style.visibility = 'visible'
+            document.getElementById("definition").style.display = "contents"
+            randomWord(26)
+        }
+        function resetGame() {
+            score = 0
+            continueGame()
+        }
+    </script>
+</body>
+
+</html>
